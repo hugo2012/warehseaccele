@@ -1,0 +1,141 @@
+<mvc:View
+    controllerName="com.bosh.sd.warehseaccele.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    displayBlock="true"
+    xmlns:u="sap.ui.unified">
+    
+    <Page id="_IDGenPage1" title="Status Dashboard">
+        <content>
+            <VBox id="_IDGenVBox" class="sapUiResponsiveMargin">
+
+                <!-- 1. RESPONSIVE HEADER FILTER BOX -->
+                <FlexBox 
+                    id="_IDGenFlexBox1" 
+                    class="customHeaderContainer sapUiSmallMarginBottom" 
+                    wrap="Wrap" 
+                    alignItems="End" 
+                    justifyContent="Start">
+                    
+                    <!-- Handling Unit Field -->
+                    <VBox id="_IDGenVBox3" class="customFieldContainer sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                        <Label id="_IDGenLabel3" text="Handling Unit" class="customFieldLabel"/>
+                        <Input id="_IDGenInput3" 
+                            value="{viewModel>/HandlingUnit}" 
+                            placeholder="Handling Unit" 
+                            class="customInput"/>
+                    </VBox>
+
+                    <!-- Delivery Note Field -->
+                    <VBox id="_IDGenVBox4" class="customFieldContainer sapUiSmallMarginEnd sapUiTinyMarginBottom">
+                        <Label id="_IDGenLabel4" text="Delivery Note" class="customFieldLabel"/>
+                        <Input id="_IDGenInput4" 
+                            value="{viewModel>/DeliveryNumber}" 
+                            placeholder="Delivery Note" 
+                            class="customInput"/>
+                    </VBox>
+
+                    <!-- Action Buttons -->
+                    <HBox id="_IDGenHBox4" class="customButtonContainer sapUiTinyMarginBottom">          
+                        <Button id="_IDGenButton7" 
+                            text="Scan" 
+                            icon="sap-icon://bar-code"
+                            press=".onScanPress" 
+                            class="customRedBtn sapUiTinyMarginEnd"/>
+
+                        <Button id="_IDGenButton6"                            
+                            text="Capture" 
+                            icon="sap-icon://camera"
+                            press=".onCapturePress" 
+                             class="customRedBtn sapUiTinyMarginEnd"/>
+                        <!-- Upload Photo Button -->
+                        <u:FileUploader
+                            id="fileUploader"
+                            name="imageUpload"
+                            buttonOnly="true"
+                            buttonText="Upload Photo"
+                            icon="sap-icon://upload"
+                            mimeType="image/png,image/jpeg"
+                            fileType="png,jpg,jpeg"
+                            change=".onFileUploadChange"
+                            class="customUploadBtn sapUiTinyMarginEnd" />     
+                         <Button id="_IDGenButton77" 
+                            text="Search" 
+                            icon="sap-icon://search"
+                            press=".onApplyFilter" 
+                            class="customRedBtn"/>
+                    </HBox>
+                </FlexBox>
+
+                <!-- 2. TABLE 1: PALLET & DELIVERY OVERVIEW -->
+                <Panel id="_IDGenPanel1" headerText="Pallet &amp; Delivery Overview" expandable="false" class="sapUiSmallMarginBottom">
+                    <Table id="huTable" items="{viewModel>/huList}" noDataText="No HUs scanned.">
+                        <columns>
+                            <Column id="_IDGenColumn"><Text id="_IDGenText" text="Delivery" /></Column>
+                            <Column id="_IDGenColumn1"><Text id="_IDGenText1" text="HU Number" /></Column>
+                            <Column id="_IDGenColumn2" hAlign="End" minScreenWidth="Tablet" demandPopin="true"><Text id="_IDGenText2" text="Confidence Score" /></Column>
+                            <Column id="_IDGenColumn3" hAlign="Center" minScreenWidth="Phone" demandPopin="true"><Text id="_IDGenText3" text="Pallet Validation Status" /></Column>
+                            <Column id="_IDGenColumn4" hAlign="Center"><Text id="_IDGenText4" text="Action" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem id="_IDGenColumnListItem">
+                                <cells>
+                                    <ObjectIdentifier id="_IDGenObjectIdentifier" title="{viewModel>DeliveryNumber}" />
+                                    <Text id="_IDGenText5" text="{viewModel>HandlingUnit}" />
+                                    <Text id="_IDGenText6" text="{viewModel>ConfidenceScore}" />
+                                    <core:Icon id="_IDGenIcon" 
+                                        src="{path: 'viewModel>ValidationStatus', formatter: '.formatStatusIcon'}" 
+                                        color="{path: 'viewModel>ValidationStatus', formatter: '.formatStatusColor'}" 
+                                        size="1.5rem" />
+                                    <Button id="_IDGenButton4" text="Scan" type="Reject" press=".onRowScanPress" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+                <!-- 3. TABLE 2: CONSIGNMENT & ASN DETAILS -->
+                <Panel id="_IDGenPanel2" headerText="Consignment &amp; ASN Details" expandable="false">
+                    <Table id="asnTable" items="{viewModel>/asnDetails}" noDataText="No ASN details available.">
+                        <columns>
+                            <Column id="_IDGenColumn5"><Text id="_IDGenText7" text="Consignment Order" /></Column>
+                            <Column id="_IDGenColumn6" hAlign="Center"><Text id="_IDGenText8" text="ASN Status" /></Column>
+                            <Column id="_IDGenColumn7" minScreenWidth="Tablet" demandPopin="true"><Text id="_IDGenText9" text="ASN Created On" /></Column>
+                            <Column id="_IDGenColumn8" minScreenWidth="Phone" demandPopin="true"><Text id="_IDGenText10" text="ASN Status Details" /></Column>
+                            <Column id="_IDGenColumn9" hAlign="End"><Text id="_IDGenText11" text="Actions" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem id="_IDGenColumnListItem1">
+                                <cells>
+                                    <Text id="_IDGenText12" text="{viewModel>ConsignmentOrder}" />
+                                    <core:Icon id="_IDGenIcon1" 
+                                        src="{path: 'viewModel>ASNStatus', formatter: '.formatStatusIcon'}" 
+                                        color="{path: 'viewModel>ASNStatus', formatter: '.formatAsnStatusColor'}" 
+                                        size="1.5rem" />
+                           
+                                  <Text 
+                                        id="_IDGenText13" 
+                                        text="{
+                                            path: 'viewModel>ASNCreatedDate',
+                                            formatter: '.formatter.formatASNData'
+                                        }" />
+                                   <Text id="_IDGenText14" text="{viewModel>StatusDescription}" />
+                                    <VBox id="_IDGenVBox2" items="{viewModel>DynamicActions}">
+                                        <Button id="_IDGenButton5" 
+                                            text="{viewModel>text}" 
+                                            type="{viewModel>type}" 
+                                            press=".onDynamicActionPress" 
+                                            class="sapUiTinyMarginBottom" />
+                                    </VBox>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>
